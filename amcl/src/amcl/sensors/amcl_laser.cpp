@@ -37,6 +37,8 @@
 
 #include "amcl/sensors/amcl_laser.h"
 
+#include <ros/console.h>
+
 using namespace amcl;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -169,6 +171,7 @@ double AMCLLaser::BeamModel(AMCLLaserData *data, pf_sample_set_t* set)
     p = 1.0;
 
     step = (data->range_count - 1) / (self->max_beams - 1);
+
     for (i = 0; i < data->range_count; i += step)
     {
       obs_range = data->ranges[i][0];
@@ -228,6 +231,8 @@ double AMCLLaser::LikelihoodFieldModel(AMCLLaserData *data, pf_sample_set_t* set
 
   total_weight = 0.0;
 
+  int num_processed = 0;
+
   // Compute the sample weights
   for (j = 0; j < set->sample_count; j++)
   {
@@ -263,6 +268,7 @@ double AMCLLaser::LikelihoodFieldModel(AMCLLaserData *data, pf_sample_set_t* set
         continue;
 
       pz = 0.0;
+      ++num_processed;
 
       // Compute the endpoint of the beam
       hit.v[0] = pose.v[0] + obs_range * cos(pose.v[2] + obs_bearing);
@@ -298,6 +304,9 @@ double AMCLLaser::LikelihoodFieldModel(AMCLLaserData *data, pf_sample_set_t* set
     sample->weight *= p;
     total_weight += sample->weight;
   }
+
+  ROS_INFO("Range count: %d, Max beams: %d, Step: %d, num_processed_per_sample: %d",
+           data->range_count, self->max_beams, (data->range_count - 1) / (self->max_beams - 1), num_processed / set->sample_count);
 
   return(total_weight);
 }
