@@ -265,7 +265,10 @@ double AMCLLaser::LikelihoodFieldModel(AMCLLaserData *data, pf_sample_set_t* set
 
       // Check for NaN
       if(obs_range != obs_range)
+      {
+        ROS_INFO("NAN range");
         continue;
+      }
 
       pz = 0.0;
       ++num_processed;

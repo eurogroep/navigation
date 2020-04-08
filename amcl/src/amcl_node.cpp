@@ -1300,7 +1300,7 @@ AmclNode::laserReceived(const sensor_msgs::LaserScanConstPtr& laser_scan)
       float intensity = i < laser_scan->intensities.size() ? laser_scan->intensities[i] : 0;
       // amcl doesn't (yet) have a concept of min range.  So we'll map short
       // readings to max range.
-      if(laser_scan->ranges[i] <= range_min || intensity < 1.0)
+      if(laser_scan->ranges[i] <= range_min || intensity < 1.0 || laser_scan->ranges[i] != laser_scan->ranges[i])
         ldata.ranges[i][0] = ldata.range_max;
       else
       {
@@ -1308,8 +1308,7 @@ AmclNode::laserReceived(const sensor_msgs::LaserScanConstPtr& laser_scan)
         num_valid_ranges++;
       }
       // Compute bearing
-      ldata.ranges[i][1] = angle_min +
-              (i * angle_increment);
+      ldata.ranges[i][1] = angle_min + (i * angle_increment);
     }
 
     ROS_INFO("Valid ranges: %d", num_valid_ranges);
