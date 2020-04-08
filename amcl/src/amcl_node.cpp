@@ -1297,9 +1297,10 @@ AmclNode::laserReceived(const sensor_msgs::LaserScanConstPtr& laser_scan)
     int num_valid_ranges = 0;
     for(int i=0;i<ldata.range_count;i++)
     {
+      float intensity = i < laser_scan->intensities.size() ? laser_scan->intensities[i] : 0;
       // amcl doesn't (yet) have a concept of min range.  So we'll map short
       // readings to max range.
-      if(laser_scan->ranges[i] <= range_min)
+      if(laser_scan->ranges[i] <= range_min || intensity < 1.0)
         ldata.ranges[i][0] = ldata.range_max;
       else
         ldata.ranges[i][0] = laser_scan->ranges[i];
