@@ -162,9 +162,9 @@ int main(int argc, char** argv)
       if (++i < argc)
       {
         threshold_occupied = std::atoi(argv[i]);
-        if (threshold_occupied < 1 || threshold_occupied > 100)
+        if (threshold_occupied < 1 || threshold_occupied > 101)
         {
-          ROS_ERROR("threshold_occupied must be between 1 and 100");
+          ROS_ERROR("threshold_occupied must be between 1 and 101");
           return 1;
         }
 

@@ -1303,15 +1303,13 @@ AmclNode::laserReceived(const sensor_msgs::LaserScanConstPtr& laser_scan)
       if(laser_scan->ranges[i] <= range_min || intensity < 1.0)
         ldata.ranges[i][0] = ldata.range_max;
       else
+      {
         ldata.ranges[i][0] = laser_scan->ranges[i];
+        num_valid_ranges++;
+      }
       // Compute bearing
       ldata.ranges[i][1] = angle_min +
               (i * angle_increment);
-
-      if (laser_scan->ranges[i] >= laser_scan->range_min && laser_scan->ranges[i] <= laser_scan->range_max)
-      {
-        num_valid_ranges++;
-      }
     }
 
     ROS_INFO("Valid ranges: %d", num_valid_ranges);
